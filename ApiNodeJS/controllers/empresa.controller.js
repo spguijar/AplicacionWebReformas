@@ -38,6 +38,20 @@ exports.getByProvincia = async (req, res) => {
     }
 }
 
+// exports.getEmpresasServicios = async (req, res) => {
+//     try {
+//         const empresas = await Empresa.findAll(include: [{
+//             model: User, as: 'userRate',
+//             include: [{
+//                 model: Status, as: 'userStatus',
+//             }],)
+//     } catch (error) {
+//         return res.status(500).send({ message: 'Fallo al buscar las empresas y servicios.', 'error': error.message });
+//     }
+
+// }
+
+
 
 
 // module.exports = list();

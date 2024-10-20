@@ -4,11 +4,12 @@ dotenv.config();
 
 module.exports = {
   username: process.env.user || 'postgres',
-  password: process.env.password,
-  database: process.env.database,
-  host: process.env.host,
-  port: process.env.port,
+  password: process.env.password || 'admin',
+  database: process.env.database || "proyecto",
+  host: process.env.host || "localhost",
+  port: process.env.port || 5432,
   dialect: "postgres",
+  logging: true,
   pool: {
     max: 5,
     min: 0,

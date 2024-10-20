@@ -5,22 +5,18 @@ const path = require('path');
 const Sequelize = require('sequelize');
 const process = require('process');
 const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
 const dbConfig = require("../config/config.js");
 const db = {};
 
-const sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, {
-  host: dbConfig.host,
-  dialect: 'postgres',
-  define: {
-    timestamps: false
-  }
-  // dialectOptions: {
-  //   ssl: {
-  //     //require: true,
-  //     rejectUnauthorized: false // <<<<<<< YOU NEED THIS
-  //   }
-})
+// const sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, {
+//   host: dbConfig.host,
+//   dialect: 'postgres',
+//   define: {
+//     timestamps: false
+//   }
+// })
+
+const sequelize = new Sequelize('postgres://postgres:admin@localhost:5432/proyecto?')
 
 
 
