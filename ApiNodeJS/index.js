@@ -8,6 +8,10 @@ dotenv.config();
 
 //Variables
 const port = process.env.PORT;
+
+
+//Variables de las rutas
+const serviciosRoute = require('./routes/servicios.route');
 const empresaRoute = require('./routes/empresa.route');
 
 
@@ -16,8 +20,12 @@ app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
+
+
 //RUTAS
 app.use('/empresa', empresaRoute);
+app.use('/servicios', serviciosRoute);
+
 
 
 app.get('/', (request, response) => {
