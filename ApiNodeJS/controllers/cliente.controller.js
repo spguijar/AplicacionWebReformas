@@ -1,6 +1,9 @@
 const { Cliente } = require("../models");
+const jwt = require('jsonwebtoken');
 const bcrypt = require("bcryptjs");
-//const { bcrypt } = require("bcryptjs");
+//TODO, meter la la variable process.env.secret_key por una de configJS
+const dotenv = require('dotenv');
+dotenv.config();
 
 exports.registrarUsuario = async (req, res) => {
     const { nombre, contraseña, email, direccion, provincia } = req.body;
@@ -20,3 +23,40 @@ exports.registrarUsuario = async (req, res) => {
         res.status(500).send({ error: 'Error al registrar el usuario', 'error': error.message });
     }
 };
+
+exports.login = async (req, res) => {
+    const { email, contraseña } = req.body;
+
+    try {
+        const cliente = await Cliente.findOne({
+            where: {
+                email: email
+            }
+        })
+        console.log(cliente)
+        if (await cliente) {
+
+            //Compramos las contraseñas
+            const isPasswordValid = await bcrypt.compare(contraseña, cliente.password);
+            if (!isPasswordValid) {
+                return res.status(401).json({ error: 'Contraseña incorrecta' });
+            } else {
+
+                const token = jwt.sign({ clienteId: cliente.id }, process.env.secret_key, { expiresIn: '1h' });
+
+                return res.status(200).send({ 'token': token })
+            }
+
+        } else {
+            throw new RangeError();
+        }
+    } catch (error) {
+        return res.status(404).send({
+            message: 'Usuario no encontrado', 'error': error.message
+        });
+
+    }
+
+
+
+}

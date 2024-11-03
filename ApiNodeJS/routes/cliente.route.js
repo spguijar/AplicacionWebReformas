@@ -6,4 +6,8 @@ router.post("/register",
     cliente.registrarUsuario
 );
 
+router.post("/login",
+    cliente.login
+);
+
 module.exports = router;
