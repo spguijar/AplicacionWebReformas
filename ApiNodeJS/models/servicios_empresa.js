@@ -2,8 +2,7 @@
 const {
   Model
 } = require('sequelize');
-const servicios = require('./servicios');
-const empresa = require('./empresa');
+
 module.exports = (sequelize, DataTypes) => {
   class Servicios_Empresa extends Model {
     /**
@@ -13,28 +12,21 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      // Servicios_Empresa.belongsTo(models.Servicios, { as: 'Servicios', foreignKey: 'id_servicios' })
-      // Servicios_Empresa.belongsTo(models.Empresas, { as: 'Empresas', foreignKey: 'id_empresa' })
+      // models.Servicios_Empresa.belongsToMany(models.Servicios, { through: 'Servicios', as: "servicios", foreignKey: "id", otherKey: "id" });
+      // models.Servicios_Empresa.belongsToMany(models.Empresa, { through: 'Empresa', as: "empresas", foreignKey: "id", otherKey: "id" });
     }
   }
   Servicios_Empresa.init({
-    id_servicio: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: servicios,
-        key: "id"
-      }
+    id_servicios: {
+      type: DataTypes.INTEGER
     },
     id_empresa: {
       type: DataTypes.INTEGER,
-      references: {
-        model: empresa,
-        key: "id"
-      }
     }
   }, {
     sequelize,
     modelName: 'Servicios_Empresa',
+    tableName: 'Servicios_Empresas'
   });
   return Servicios_Empresa;
 };

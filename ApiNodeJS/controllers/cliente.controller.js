@@ -36,7 +36,7 @@ exports.login = async (req, res) => {
         console.log(cliente)
         if (await cliente) {
 
-            //Compramos las contraseñas
+            //Comparamos las contraseñas
             const isPasswordValid = await bcrypt.compare(contraseña, cliente.password);
             if (!isPasswordValid) {
                 return res.status(401).json({ error: 'Contraseña incorrecta' });
@@ -44,7 +44,7 @@ exports.login = async (req, res) => {
 
                 const token = jwt.sign({ clienteId: cliente.id }, process.env.secret_key, { expiresIn: '1h' });
 
-                return res.status(200).send({ 'token': token })
+                return res.status(200).send({ 'token': token, 'nombre': cliente.nombre, 'provincia': cliente.provincia, 'direccion': cliente.direccion })
             }
 
         } else {

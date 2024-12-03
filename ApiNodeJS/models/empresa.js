@@ -10,9 +10,14 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
-      //Empresa.hasMany(models.Servicios);
-    }
+      // Empresa.associate = (models) => {
+      Empresa.belongsToMany(models.Servicios, {
+        through: models.Servicios_Empresa,
+        foreignKey: 'id_empresa',
+        otherKey: 'id_servicios',
+      });
+    };
+    // }
   }
   Empresa.init({
     id: {
@@ -28,6 +33,10 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Empresa',
+    tableName: 'Empresas'
   });
+
+
+
   return Empresa;
 };

@@ -11,14 +11,29 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      //Servicios.hasMany(models.Empresas);
+      Servicios.belongsToMany(models.Empresa, {
+        through: models.Servicios_Empresa, // Modelo intermedio
+        foreignKey: 'id_servicios',       // Clave foránea en la tabla intermedia
+        otherKey: 'id_empresa',           // Otra clave foránea
+      });
     }
+
   }
   Servicios.init({
     tarea: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Servicios',
+    tableName: 'Servicios'
   });
+
+  // Servicios.associate = (models) => {
+  //   Servicios.belongsToMany(models.Empresa, {
+  //     through: models.Servicios_Empresa,
+  //     foreignKey: 'id_servicios',
+  //     otherKey: 'id_empresa',
+  //   });
+  // };
+
   return Servicios;
 };

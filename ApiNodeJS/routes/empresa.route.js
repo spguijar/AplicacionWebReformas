@@ -9,5 +9,10 @@ router.get("/getAll",
 router.get("/getByProvincia/:provincia",
     empresa.getByProvincia
 );
+
+router.get("/getEmpresawithServicio",
+    empresa.getEmpresawithServicio);
+
+
 module.exports = router;
 

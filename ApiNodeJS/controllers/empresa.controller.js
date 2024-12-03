@@ -1,20 +1,27 @@
-const { Empresa } = require("../models");
-//const servicios_empresa = require("../models/servicios_empresa");
+const { Empresa, Servicios } = require("../models");
+const empresa = require("../models/empresa");
+const servicios = require("../models/servicios");
+const { Servicios_Empresa } = require("../models")
+const relacion = require("../models/index.js");
 
 
-// exports.postEmpresawithServicio = async (req, res, nex) => {
-//     try {
-//         const empresa = await Empresa.create(req.body);
+exports.getEmpresawithServicio = async (req, res) => {
+    try {
+        const result = await Servicios.findAll({
+            include: [
+                {
+                    model: Empresa,
+                    //Para que no se muestre la tabla intermedia en los resultados
+                    through: { attributes: [] },
+                }
+            ],
+        });
+        return res.status(200).send({ result });
+    } catch (error) {
+        return res.status(500).send({ message: 'Error crear empresas y sus servicios.', 'error': error.message });
+    }
+}
 
-//         const relacion = await servicios_empresa({
-//             id_servicio: req.body.id_servicio,
-//             id_empresa: empresa.id
-//         })
-//         return res.status(200).send({ message: "empresa creada con exito", empresa });
-//     } catch (error) {
-//         return res.status(500).send({ message: 'Error crear empresas y sus servicios.', 'error': error.message });
-//     }
-// }
 exports.getAll = async (req, res) => {
     try {
         const empresa = await Empresa.findAll();
@@ -26,7 +33,6 @@ exports.getAll = async (req, res) => {
 exports.getByProvincia = async (req, res) => {
     try {
         const provincia = req.params.provincia;
-        console.log(provincia)
         const empresas = await Empresa.findAll({
             where: {
                 provincia: provincia
@@ -37,24 +43,3 @@ exports.getByProvincia = async (req, res) => {
         return res.status(500).send({ message: 'Fallo al buscar las empresas.', 'error': error.message });
     }
 }
-
-// exports.getEmpresasServicios = async (req, res) => {
-//     try {
-//         const empresas = await Empresa.findAll(include: [{
-//             model: User, as: 'userRate',
-//             include: [{
-//                 model: Status, as: 'userStatus',
-//             }],)
-//     } catch (error) {
-//         return res.status(500).send({ message: 'Fallo al buscar las empresas y servicios.', 'error': error.message });
-//     }
-
-// }
-
-
-
-
-// module.exports = list();
-// exports.list = (req, res) => {
-//     return res.status(500).send('hola');
-// }
