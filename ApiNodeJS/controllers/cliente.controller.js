@@ -1,4 +1,4 @@
-const { Cliente } = require("../models");
+const { Cliente, Servicios_Empresa } = require("../models");
 const jwt = require('jsonwebtoken');
 const bcrypt = require("bcryptjs");
 //TODO, meter la la variable process.env.secret_key por una de configJS
@@ -59,4 +59,22 @@ exports.login = async (req, res) => {
 
 
 
+}
+
+
+exports.getClienteandServicios = async (req, res) => {
+    try {
+        const result = await Cliente.findAll({
+            include: [
+                {
+                    model: Servicios_Empresa,
+                    //Para que no se muestre la tabla intermedia en los resultados
+                    through: { attributes: [] },
+                }
+            ],
+        });
+        return res.status(200).send({ result });
+    } catch (error) {
+        return res.status(500).send({ message: 'Error obtener empresas y sus servicios.', 'error': error.message });
+    }
 }

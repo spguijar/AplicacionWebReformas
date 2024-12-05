@@ -9,5 +9,8 @@ router.post("/register",
 router.post("/login",
     cliente.login
 );
+router.get("/getClienteandServicios",
+    cliente.getClienteandServicios
+);
 
 module.exports = router;
