@@ -17,8 +17,6 @@ const sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.p
   logging: console.log
 })
 
-//const sequelize = new Sequelize('postgres://postgres:admin@localhost:5432/proyecto?')
-
 
 
 fs
