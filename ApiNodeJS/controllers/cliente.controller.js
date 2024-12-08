@@ -1,4 +1,4 @@
-const { Cliente, Servicios_Empresa, Clientes_Servicios_Empresas, Empresa, Servicios } = require("../models");
+const { Cliente, Servicios_Empresa, Clientes_Servicios_Empresa, Empresa, Servicios } = require("../models");
 const jwt = require('jsonwebtoken');
 const bcrypt = require("bcryptjs");
 //TODO, meter la la variable process.env.secret_key por una de configJS
@@ -61,7 +61,6 @@ exports.login = async (req, res) => {
 
 }
 
-
 exports.getClienteandServicios = async (req, res) => {
     try {
         const result = await Cliente.findAll({
@@ -89,6 +88,14 @@ exports.getClienteandServicios = async (req, res) => {
     }
 }
 exports.crearClienteandServicios = async (req, res) => {
-
-
+    const { id_cliente, id_servicio_empresa } = req.body;
+    try {
+        const Clientes_Servicios_Empresas = await Clientes_Servicios_Empresa.create({
+            id_cliente: id_cliente,
+            id_servicio_empresa: id_servicio_empresa,
+        })
+        res.status(201).send({ message: 'Creación de un registro en Clientes_Servicios_Empresas con éxito' });
+    } catch (error) {
+        res.status(500).send({ error: 'Error al registrar Clientes_Servicios_Empresas', 'error': error.message });
+    }
 }

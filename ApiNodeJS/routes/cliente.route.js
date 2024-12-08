@@ -9,6 +9,8 @@ router.post("/register",
 router.post("/login",
     cliente.login
 );
+
+router.post("/crearClienteandServicios", cliente.crearClienteandServicios)
 router.get("/getClienteandServicios",
     cliente.getClienteandServicios
 );
