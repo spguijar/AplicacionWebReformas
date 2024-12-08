@@ -5,4 +5,5 @@ router.get("/getAll",
     servicios.getAll
 );
 
+router.get("/getByProvincia", servicios.getByProvincia)
 module.exports = router;
