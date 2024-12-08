@@ -1,4 +1,4 @@
-const { Cliente } = require("../models");
+const { Cliente, Servicios_Empresa, Clientes_Servicios_Empresa, Empresa, Servicios } = require("../models");
 const jwt = require('jsonwebtoken');
 const bcrypt = require("bcryptjs");
 //TODO, meter la la variable process.env.secret_key por una de configJS
@@ -59,4 +59,43 @@ exports.login = async (req, res) => {
 
 
 
+}
+
+exports.getClienteandServicios = async (req, res) => {
+    try {
+        const result = await Cliente.findAll({
+            include: [
+                {
+                    model: Servicios_Empresa,
+                    //Para que no se muestre la tabla intermedia en los resultados
+                    through: { attributes: [] },
+                    include: [
+                        {
+                            model: Empresa, // Incluye los datos de la empresa
+                            attributes: ['nombre', 'provincia'], // Campos que deseas obtener
+                        },
+                        {
+                            model: Servicios, // Incluye los datos del servicio
+                            attributes: ['tarea'], // Campos que deseas obtener
+                        },
+                    ],
+                }
+            ],
+        });
+        return res.status(200).send({ result });
+    } catch (error) {
+        return res.status(500).send({ message: 'Error obtener empresas y sus servicios.', 'error': error.message });
+    }
+}
+exports.crearClienteandServicios = async (req, res) => {
+    const { id_cliente, id_servicio_empresa } = req.body;
+    try {
+        const Clientes_Servicios_Empresas = await Clientes_Servicios_Empresa.create({
+            id_cliente: id_cliente,
+            id_servicio_empresa: id_servicio_empresa,
+        })
+        res.status(201).send({ message: 'Creación de un registro en Clientes_Servicios_Empresas con éxito' });
+    } catch (error) {
+        res.status(500).send({ error: 'Error al registrar Clientes_Servicios_Empresas', 'error': error.message });
+    }
 }
