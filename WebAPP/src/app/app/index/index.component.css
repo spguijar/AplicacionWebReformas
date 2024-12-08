@@ -1,0 +1,42 @@
+p-menubar {
+    /* position: fixed; */
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+/* Estilos generales para el menú */
+.menu-bar {
+    background-color: #ff6600;
+    /* Color de fondo naranja */
+}
+
+.menu-bar .p-menuitem-link {
+    color: white;
+    /* Color de texto blanco */
+}
+
+.menu-bar .p-menuitem-link:hover {
+    background-color: #ff8533;
+    /* Color de fondo naranja más claro al pasar el ratón */
+}
+
+.menu-bar .p-menuitem-link:active {
+    background-color: #ff4d00;
+    /* Color de fondo naranja al hacer clic */
+}
+
+.menu-bar .p-submenu {
+    background-color: #ff6600;
+    /* Fondo naranja para el submenú */
+}
+
+.menu-bar .p-submenu .p-menuitem-link {
+    color: white;
+    /* Color de texto blanco en los submenús */
+}
+
+.menu-bar .p-submenu .p-menuitem-link:hover {
+    background-color: #ff8533;
+    /* Fondo naranja claro en submenús al pasar el ratón */
+}
