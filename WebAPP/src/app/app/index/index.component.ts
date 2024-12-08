@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { SharedDataService } from '../../services/shared-data.service'
 import { cliente } from 'src/app/interfaces/cliente.interface';
 import { Router, RouterLink } from '@angular/router';
+import { dataCliente } from '../utils';
 
 @Component({
   selector: 'app-index',
@@ -10,11 +11,7 @@ import { Router, RouterLink } from '@angular/router';
 })
 export class IndexComponent implements OnInit {
 
-  public infoCliente: cliente = {
-    nombre: "",
-    provincia: "",
-    direccion: ""
-  };
+  public infoCliente: cliente = dataCliente;
   items: any[];
 
   constructor(private sharedDataService: SharedDataService, private router: Router) {

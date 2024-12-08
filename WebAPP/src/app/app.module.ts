@@ -14,13 +14,15 @@ import { IndexComponent } from './app/index/index.component';
 import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
+import { ServiciosComponent } from './app/servicios/servicios.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     EmpresasComponent,
     LoginComponent,
-    IndexComponent
+    IndexComponent,
+    ServiciosComponent
   ],
   imports: [
     BrowserModule,
