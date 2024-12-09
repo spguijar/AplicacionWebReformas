@@ -19,18 +19,22 @@ export class IndexComponent implements OnInit {
       {
         label: 'Inicio',
         //icon: 'pi pi-home',
+        icon: null,
         command: () => { this.goToHome(); }
       },
       {
         label: 'Servicios',
-        icon: 'pi pi-shopping-cart',
+        //icon: 'pi pi-shopping-cart',
+        //RouterLink: ['/servicios'],
+        icon: null,
         command: () => { this.goToServices(); }
       },
       {
         label: 'Empresas',
-        icon: 'pi pi-shopping-cart',
-        RouterLink: ['/empresas'],
-        // command: () => { this.goToCompany(); }
+        //icon: 'pi pi-shopping-cart',
+        icon: null,
+        //routerLink: ['/empresas'],
+        command: () => { this.goToCompany(); }
       },
       {
         label: 'Opciones',
@@ -49,7 +53,6 @@ export class IndexComponent implements OnInit {
   ngOnInit() {
     this.sharedDataService.sharedCliente$.subscribe(cliente => {
       this.infoCliente = cliente;
-
     })
 
   }
@@ -61,10 +64,11 @@ export class IndexComponent implements OnInit {
   goToServices() {
     // Navegar a la página de servicios
     console.log('Ir a servicios');
+    this.router.navigate(['/home/servicios'])
   }
   goToCompany() {
     console.log('Ir a empresas');
-    this.router.navigate(['/empresas'])
+    this.router.navigate(['/home/empresas'])
   }
 
   logout() {
