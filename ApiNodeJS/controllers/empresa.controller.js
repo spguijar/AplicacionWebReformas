@@ -18,7 +18,7 @@ exports.getEmpresawithServicio = async (req, res) => {
         });
         return res.status(200).send({ result });
     } catch (error) {
-        return res.status(500).send({ message: 'Error obtener empresas y sus servicios.', 'error': error.message });
+        return res.status(500).send({ message: 'Error crear empresas y sus servicios.', 'error': error.message });
     }
 }
 

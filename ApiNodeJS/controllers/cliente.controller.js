@@ -44,7 +44,9 @@ exports.login = async (req, res) => {
 
                 const token = jwt.sign({ clienteId: cliente.id }, process.env.secret_key, { expiresIn: '1h' });
 
-                return res.status(200).send({ 'token': token, 'nombre': cliente.nombre, 'provincia': cliente.provincia, 'direccion': cliente.direccion })
+                return res.status(200).send({
+                    'token': token, 'id_cliente': cliente.id, 'nombre': cliente.nombre, 'provincia': cliente.provincia, 'direccion': cliente.direccion
+                })
             }
 
         } else {
@@ -56,9 +58,6 @@ exports.login = async (req, res) => {
         });
 
     }
-
-
-
 }
 
 exports.getClienteandServicios = async (req, res) => {
