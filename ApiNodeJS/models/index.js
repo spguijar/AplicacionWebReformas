@@ -47,5 +47,6 @@ db.Sequelize = Sequelize;
 console.log('RELACIONES CONFIGURADAS:');
 console.log('RELACION EMPRESA:', db.Empresa.associations);
 console.log('RELACION SERVICIOS:', db.Servicios.associations);
+console.log('RELACION CLIENTE:', db.Empresa.associations);
 
 module.exports = db;

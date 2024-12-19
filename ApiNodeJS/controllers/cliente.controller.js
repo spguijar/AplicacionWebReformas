@@ -61,6 +61,7 @@ exports.login = async (req, res) => {
 }
 
 exports.getClienteandServicios = async (req, res) => {
+    const { id_cliente } = req.query;
     try {
         const result = await Cliente.findAll({
             include: [
