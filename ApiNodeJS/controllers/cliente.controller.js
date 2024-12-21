@@ -88,14 +88,34 @@ exports.getClienteandServicios = async (req, res) => {
     }
 }
 exports.crearClienteandServicios = async (req, res) => {
-    const { id_cliente, id_servicio_empresa } = req.body;
+    const { id_cliente, id_servicio_empresa, preciocontrat } = req.body;
     try {
         const Clientes_Servicios_Empresas = await Clientes_Servicios_Empresa.create({
             id_cliente: id_cliente,
             id_servicio_empresa: id_servicio_empresa,
+            preciocontrat: preciocontrat
         })
         res.status(201).send({ message: 'Creación de un registro en Clientes_Servicios_Empresas con éxito' });
     } catch (error) {
         res.status(500).send({ error: 'Error al registrar Clientes_Servicios_Empresas', 'error': error.message });
     }
+}
+
+exports.eliminarClienteandServicios = async (req, res) => {
+    const { id_cliente, id_servicio_empresa } = req.body;
+    Clientes_Servicios_Empresa.destroy({
+        where: {
+            id_cliente: id_cliente,
+            id_servicio_empresa: id_servicio_empresa
+        }
+    })
+        .then((rowsDeleted) => {
+            if (rowsDeleted > 0) {
+                return res.status(200).send(`Eliminado el servicio del cliente ${id_cliente} ${id_servicio_empresa}`)
+            }
+            else { return res.status(201).send(`No se encontró ningún registro que coincidiera con la condición ${id_cliente} ${id_servicio_empresa}`) }
+        })
+        .catch(error => {
+            res.status(201).send('Error al eliminar los registros:', error);
+        });
 }

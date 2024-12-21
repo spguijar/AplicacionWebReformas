@@ -18,7 +18,8 @@ module.exports = (sequelize, DataTypes) => {
   }
   Clientes_Servicios_Empresa.init({
     id_cliente: DataTypes.INTEGER,
-    id_servicio_empresa: DataTypes.INTEGER
+    id_servicio_empresa: DataTypes.INTEGER,
+    preciocontrat: DataTypes.DECIMAL(10, 2),
   }, {
     sequelize,
     modelName: 'Clientes_Servicios_Empresa',
