@@ -4,6 +4,7 @@ import { SharedDataService } from 'src/app/services/shared-data.service';
 import { dataCliente } from '../utils';
 import { ApiService } from 'src/app/services/api.service';
 import { Subject, takeUntil } from 'rxjs';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-servicios',
@@ -23,7 +24,7 @@ export class ServiciosComponent implements OnInit {
   public id_cliente: number = 0;
   private unsubscribe$ = new Subject<void>();
 
-  constructor(private sharedDataService: SharedDataService, private apiService: ApiService) {
+  constructor(private sharedDataService: SharedDataService, private apiService: ApiService, private confirmationService: ConfirmationService) {
 
 
   }
@@ -79,14 +80,34 @@ export class ServiciosComponent implements OnInit {
         }, error => console.error('Error al obtener los datos:', error)
       )
   }
-  borrarTarea(index: number): void {
-    this.tareasClientes.splice(index, 1); // Elimina la tarea por índice
-  }
+
 
   onSubmit() {
     console.log(`Tarea seleccionada: ${this.selectedTarea}`);
     console.log(`Horas imputadas: ${this.horas}`);
   }
+
+  confirmBorradoServicio(index: number) {
+    console.log('confirmdelete....');
+
+    //Mensaje de dialogo de borrado del servicio
+    this.confirmationService.confirm({
+      message: '¿Seguro que deseas borrar el servicio seleccionado?',
+      header: 'Confirmación de Borrado',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Sí',
+      rejectLabel: 'No',
+      accept: () => {
+        // Acción a realizar si el usuario acepta
+        console.log('Servicio borrado');
+        this.tareasClientes.splice(index, 1); // Elimina la tarea por índice
+      },
+      reject: () => {
+        // Acción a realizar si el usuario rechaza
+        console.log('Borrado cancelado');
+      }
+    });
+  }
+
+
 }
-
-

@@ -35,7 +35,7 @@
                     <td style="text-align: right;">{{ tarea }}</td>
                     <td style="text-align: left;">
                         <button pButton type="button" icon="pi pi-trash" class="p-button-rounded p-button-danger"
-                            (click)="borrarTarea(tarea)">
+                            (click)="confirmBorradoServicio(tarea)">
                         </button>
                     </td>
                 </tr>
@@ -43,5 +43,6 @@
         </p-table>
     </div>
 </div>
+<p-confirmDialog></p-confirmDialog>
 
 <!-- <div>{{data| json}}</div> -->
