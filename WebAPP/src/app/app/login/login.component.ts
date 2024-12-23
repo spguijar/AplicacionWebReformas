@@ -25,9 +25,8 @@ export class LoginComponent {
       .subscribe(
         response => {
           localStorage.setItem('token', response.token);
-          this.router.navigate(['/home']);
+          this.router.navigate(['/home/inicio']);
           this.sharedDataService.setSharedData(response);
-
           console.log('Login exitoso');
         }, error => {
           alert('Credenciales incorrectas ');

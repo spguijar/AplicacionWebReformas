@@ -1,1 +1,47 @@
-<div>los servicios que hay en {{infoCliente.provincia}}</div>
+<div>Los servicios que hay actualmente en {{provinciaCliente}} son los siguientes:</div>
+
+<div class="form-container">
+    <form (ngSubmit)="onSubmit()">
+        <!-- Dropdown para seleccionar una tarea -->
+        <div class="form-row">
+            <label for="tarea">Tarea:</label>
+            <p-dropdown [options]="tareas" [(ngModel)]="selectedTarea" name="tarea" placeholder="Seleccione una tarea"
+                inputId="tarea">
+            </p-dropdown>
+        </div>
+
+        <!-- Input para las horas imputadas -->
+        <div class="form-row">
+            <label for="horas">Horas:</label>
+            <input type="number" id="horas" [(ngModel)]="horas" name="horas" placeholder="Ingrese las horas" min="0">
+        </div>
+
+        <!-- Botón de envío -->
+        <div class="form-row">
+            <button pButton type="submit" label="Contratar"></button>
+        </div>
+    </form>
+
+    <div>
+        <p-table [value]="tareasClientes" [style]="{ width: '100%' }">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="text-align: right;">Tarea</th>
+                    <th style="text-align: left;">Acciones</th>
+                </tr>
+            </ng-template>
+            <ng-template let-tarea pTemplate="body">
+                <tr>
+                    <td style="text-align: right;">{{ tarea }}</td>
+                    <td style="text-align: left;">
+                        <button pButton type="button" icon="pi pi-trash" class="p-button-rounded p-button-danger"
+                            (click)="borrarTarea(tarea)">
+                        </button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<!-- <div>{{data| json}}</div> -->

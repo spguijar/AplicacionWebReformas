@@ -59,6 +59,7 @@ export class IndexComponent implements OnInit {
   goToHome() {
     // Navegar a la página de inicio
     console.log('Ir a Inicio');
+    this.router.navigate(['/home/inicio'])
   }
 
   goToServices() {
