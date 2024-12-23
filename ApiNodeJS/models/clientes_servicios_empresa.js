@@ -11,11 +11,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Clientes_Servicios_Empresa.belongsTo(models.Cliente, { foreignKey: 'id_cliente' });
+
+      Clientes_Servicios_Empresa.belongsTo(models.Servicios_Empresa, { foreignKey: 'id_servicio_empresa' });
     }
   }
   Clientes_Servicios_Empresa.init({
     id_cliente: DataTypes.INTEGER,
-    id_servicio_empresa: DataTypes.INTEGER
+    id_servicio_empresa: DataTypes.INTEGER,
+    preciocontrat: DataTypes.DECIMAL(10, 2),
   }, {
     sequelize,
     modelName: 'Clientes_Servicios_Empresa',
