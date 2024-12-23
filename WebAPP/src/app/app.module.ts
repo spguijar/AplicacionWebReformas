@@ -17,6 +17,7 @@ import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { ServiciosComponent } from './app/servicios/servicios.component';
 import { TableModule } from 'primeng/table';
+import { FooterComponent } from './app/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { TableModule } from 'primeng/table';
     LoginComponent,
     IndexComponent,
     ServiciosComponent,
-    InicioComponent
+    InicioComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
