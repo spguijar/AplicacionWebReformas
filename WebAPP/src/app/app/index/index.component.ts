@@ -18,21 +18,18 @@ export class IndexComponent implements OnInit {
     this.items = [
       {
         label: 'Inicio',
-        //icon: 'pi pi-home',
-        icon: null,
+        icon: 'pi pi-home',
         command: () => { this.goToHome(); }
       },
       {
         label: 'Servicios',
-        //icon: 'pi pi-shopping-cart',
+        icon: 'pi pi-shopping-cart',
         //RouterLink: ['/servicios'],
-        icon: null,
         command: () => { this.goToServices(); }
       },
       {
         label: 'Empresas',
-        //icon: 'pi pi-shopping-cart',
-        icon: null,
+        icon: 'pi pi-building',
         //routerLink: ['/empresas'],
         command: () => { this.goToCompany(); }
       },
