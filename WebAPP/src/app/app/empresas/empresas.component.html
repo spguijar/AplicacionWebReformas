@@ -1,2 +1,5 @@
-<p>empresas works!</p>
-<p>{{ data | json }}</p>
+<div class="container">
+    <div *ngFor="let empresa of empresas; let i = index" class="circle" [ngStyle]="circleStyles[i]">
+        {{ empresa }}
+    </div>
+</div>
