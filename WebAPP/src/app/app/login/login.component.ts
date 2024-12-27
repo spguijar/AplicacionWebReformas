@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { SharedDataService } from 'src/app/services/shared-data.service';
+import { MessageService } from 'primeng/api';
 
 
 @Component({
@@ -17,7 +18,7 @@ export class LoginComponent {
 
   private unsubscribe$ = new Subject<void>();
 
-  constructor(private apiService: ApiService, private router: Router, private sharedDataService: SharedDataService) { }
+  constructor(private apiService: ApiService, private router: Router, private sharedDataService: SharedDataService, private messageService: MessageService) { }
   login(): void {
     console.log(this.email, this.password)
     this.apiService.login(this.email, this.password)
@@ -29,8 +30,11 @@ export class LoginComponent {
           this.sharedDataService.setSharedData(response);
           console.log('Login exitoso');
         }, error => {
-          alert('Credenciales incorrectas ');
-          console.error('Error en el inicio de sesión', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Credenciales incorrectas',
+          });
         });
   }
 }

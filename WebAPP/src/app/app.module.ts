@@ -19,7 +19,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ServiciosComponent } from './app/servicios/servicios.component';
 import { TableModule } from 'primeng/table';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
   declarations: [
@@ -41,9 +42,10 @@ import { ConfirmationService } from 'primeng/api';
     MenubarModule,
     DropdownModule,
     TableModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    ToastModule
   ],
-  providers: [ConfirmationService],
+  providers: [ConfirmationService, MessageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

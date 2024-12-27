@@ -4,7 +4,7 @@ import { SharedDataService } from 'src/app/services/shared-data.service';
 import { dataCliente } from '../utils';
 import { ApiService } from 'src/app/services/api.service';
 import { Subject, takeUntil } from 'rxjs';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-servicios',
@@ -25,7 +25,7 @@ export class ServiciosComponent implements OnInit {
   public id_cliente: number = 0;
   private unsubscribe$ = new Subject<void>();
 
-  constructor(private sharedDataService: SharedDataService, private apiService: ApiService, private confirmationService: ConfirmationService) {
+  constructor(private sharedDataService: SharedDataService, private apiService: ApiService, private confirmationService: ConfirmationService, private messageService: MessageService) {
 
 
   }
@@ -153,9 +153,19 @@ export class ServiciosComponent implements OnInit {
           this.subscribecrearClienteyServicios(this.selectedTarea, this.id_cliente, this.presupuesto)
             .then(status => {
               console.log('Status recibido:', status);
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Éxito',
+                detail: 'Servicio contratado correctamente',
+              });
             })
             .catch(errorStatus => {
               console.error('Status de error recibido:', errorStatus);
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Ocurrió un problema al contratar el servicio',
+              });
             });
         },
         reject: () => {
