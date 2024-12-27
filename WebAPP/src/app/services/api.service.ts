@@ -14,6 +14,7 @@ export class ApiService {
   private loginUrl = '/cliente/login';
   private clienteeliminarClienteandServiciosUrl = '/cliente/eliminarClienteandServicios';
   private serviciosbyclienteUrl = '/servicios/getByCliente';
+  private clienteCrearClienteandServiciosUrl = '/cliente/crearClienteandServicios';
 
 
   constructor(private http: HttpClient) { }
@@ -47,6 +48,18 @@ export class ApiService {
       .append('id_servicio_empresa', id_servicio_empresa);
     console.log(params);
     return this.http.get<any>(this.apiUrl + this.clienteeliminarClienteandServiciosUrl, { params });
+  }
+  crearClienteyServicios(id_servicio_empresa: string, id_cliente: number, preciocontrat: number): Observable<any> {
+    const params = {
+      id_cliente: id_cliente,
+      id_servicio_empresa: id_servicio_empresa,
+      preciocontrat: preciocontrat,
+    }
+
+    console.log(params)
+
+    return this.http.post<any>(this.apiUrl + this.clienteCrearClienteandServiciosUrl, params, { observe: 'response' });
+
   }
 
 

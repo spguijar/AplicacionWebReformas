@@ -19,7 +19,8 @@ export class ServiciosComponent implements OnInit {
   selectedTarea: any; // Variable para la tarea seleccionada
   horas: number = 0; // Campo para almacenar las horas imputadas
   tareasClientes: string[] = [];
-  ;
+  presupuesto: number = 0;
+
   public provinciaCliente: string = '';
   public id_cliente: number = 0;
   private unsubscribe$ = new Subject<void>();
@@ -56,10 +57,11 @@ export class ServiciosComponent implements OnInit {
             //})
           };
           console.log('data', this.data);
+          console.log(Object.keys(this.data).map((key) => this.data[key].Empresas[0].nombre));
 
           this.tareas = Object.keys(this.data).map((key) => ({
-            label: this.data[key].tarea, // Lo que se muestra en el dropdown
-            value: key                  // Valor único
+            label: this.data[key].tarea + ' - ' + this.data[key].Empresas[0].nombre, // Lo que se muestra en el dropdown
+            value: this.data[key].Empresas[0].Servicios_Empresa.id                  // Valor único
           }));
 
         },
@@ -79,6 +81,33 @@ export class ServiciosComponent implements OnInit {
           this.tareasClientes = ['fontaneria', 'grifos', 'pintura']
         }, error => console.error('Error al obtener los datos:', error)
       )
+  }
+
+  calcularPresupuesto(): void {
+    this.presupuesto = this.getPresupuesto(this.data, this.selectedTarea, this.horas);
+  }
+
+  getPresupuesto(data: any, selectedTarea: string, horas: number): number {
+    console.log(data, selectedTarea, horas);
+    //Condicional si en el caso de que una tarea o las horas son inválidas, retorna 0
+    if ((selectedTarea === '') || (horas <= 0)) {
+
+      return 0;
+    }
+    console.log(Object.values(data))
+    const tareaEncontrada = Object.values(data).find(
+      (item: any) => item.Empresas[0].Servicios_Empresa.id === selectedTarea
+    );
+
+    if (tareaEncontrada) {
+      // Obtén el precio por hora de la primera empresa asociada a la tarea
+      const precioHora = (tareaEncontrada as any).Empresas[0]?.preciohora;
+
+      // Calcula y retorna el presupuesto
+      return precioHora * horas;
+    }
+
+    return 0; // Si no se encuentra la tarea, retorna 0
   }
 
 
@@ -109,5 +138,50 @@ export class ServiciosComponent implements OnInit {
     });
   }
 
+  confirmCreacionServicio() {
+    if (this.selectedTarea && this.presupuesto) {
+      //Mensaje de dialogo de borrado del servicio
+      this.confirmationService.confirm({
+        message: `¿Seguro que deseaa contratar el servicio por ${this.presupuesto} €?`,
+        header: 'Confirmación de creación del servicio',
+        icon: 'pi pi-exclamation-triangle',
+        acceptLabel: 'Sí',
+        rejectLabel: 'No',
+        accept: () => {
+          // Acción a realizar si el usuario acepta
+          console.log('Servicio creado');
+          this.subscribecrearClienteyServicios(this.selectedTarea, this.id_cliente, this.presupuesto)
+            .then(status => {
+              console.log('Status recibido:', status);
+            })
+            .catch(errorStatus => {
+              console.error('Status de error recibido:', errorStatus);
+            });
+        },
+        reject: () => {
+          // Acción a realizar si el usuario rechaza
+          console.log('Borrado cancelado');
+        }
 
+      });
+    }
+  }
+  subscribecrearClienteyServicios(id_servicio_empresa: string, id_cliente: number, preciocontrat: number): Promise<number> {
+    return new Promise((resolve, reject) => {
+      this.apiService.crearClienteyServicios(id_servicio_empresa, id_cliente, preciocontrat)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(
+          response => {
+            console.log(response);
+            console.log(response.status)
+            resolve(response.status);
+          },
+          error => {
+            console.error('Error completo:', error);
+            console.error('Status de error:', error.status);
+            reject(error.status); // Rechazamos el status en caso de error
+          }
+        );
+    });
+  }
 }

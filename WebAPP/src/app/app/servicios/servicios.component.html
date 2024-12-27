@@ -1,19 +1,24 @@
 <div>Los servicios que hay actualmente en {{provinciaCliente}} son los siguientes:</div>
 
 <div class="form-container">
-    <form (ngSubmit)="onSubmit()">
+    <form (ngSubmit)="confirmCreacionServicio()">
         <!-- Dropdown para seleccionar una tarea -->
         <div class="form-row">
             <label for="tarea">Tarea:</label>
             <p-dropdown [options]="tareas" [(ngModel)]="selectedTarea" name="tarea" placeholder="Seleccione una tarea"
-                inputId="tarea">
+                inputId="tarea" (onchange)="calcularPresupuesto()">
             </p-dropdown>
         </div>
 
         <!-- Input para las horas imputadas -->
         <div class="form-row">
             <label for="horas">Horas:</label>
-            <input type="number" id="horas" [(ngModel)]="horas" name="horas" placeholder="Ingrese las horas" min="0">
+            <input type="number" id="horas" [(ngModel)]="horas" name="horas" placeholder="Ingrese las horas" min="0"
+                (input)="calcularPresupuesto()">
+        </div>
+        <div class="form-row">
+            <label for="presupuesto">Presupuesto:</label>
+            <p>{{ presupuesto | currency: 'EUR' }}</p>
         </div>
 
         <!-- Botón de envío -->
@@ -27,12 +32,14 @@
             <ng-template pTemplate="header">
                 <tr>
                     <th style="text-align: right;">Tarea</th>
+                    <th>Presupuesto</th>
                     <th style="text-align: left;">Acciones</th>
                 </tr>
             </ng-template>
             <ng-template let-tarea pTemplate="body">
                 <tr>
                     <td style="text-align: right;">{{ tarea }}</td>
+                    <td>0€</td>
                     <td style="text-align: left;">
                         <button pButton type="button" icon="pi pi-trash" class="p-button-rounded p-button-danger"
                             (click)="confirmBorradoServicio(tarea)">

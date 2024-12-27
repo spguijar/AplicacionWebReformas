@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -11,10 +11,10 @@ import { SharedDataService } from 'src/app/services/shared-data.service';
   templateUrl: './empresas.component.html',
   styleUrls: ['./empresas.component.css']
 })
-export class EmpresasComponent implements OnInit {
+export class EmpresasComponent implements OnInit, AfterViewInit {
   data: any;
   public infoCliente: cliente = dataCliente;
-  public empresas: any = ['empresa 1', 'empresa 2', 'empresa 3', 'empresa 4', 'empresa 5',];
+  public empresas: any
   circleStyles: any[] = [];
   private unsubscribe$ = new Subject<void>();
 
@@ -24,28 +24,33 @@ export class EmpresasComponent implements OnInit {
     this.sharedDataService.sharedCliente$.subscribe(cliente => {
       this.infoCliente = cliente;
     })
+
+
+
+
+    // console.log(this.data);
+    // const nombres = Object.values(this.data).map((item: any) => { item.nombre });
+    // console.log(nombres)
+  }
+  ngAfterViewInit(): void {
     this.apiService.getDataEmpresasbyProvincia(this.infoCliente.provincia)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(
         response => {
           this.data = { ...response["empresas"] }
-          const nombres = Object.values(this.data).map((item: any) => { item["nombre"] });
-          console.log(nombres)
+          this.empresas = Object.values(this.data).map(item => (item as any).nombre);
+          this.circleStyles = this.empresas.map(() => {
+            return {
+              top: this.getRandomPosition(80) + '%', // Top aleatorio
+              left: this.getRandomPosition(80) + '%', // Left aleatorio
+              backgroundColor: this.getRandomColor() // Color aleatorio
+            };
+          });
         },
         error => console.error('Error al obtener los datos:', error)
       );
 
 
-    this.circleStyles = this.empresas.map(() => {
-      return {
-        top: this.getRandomPosition(80) + '%', // Top aleatorio
-        left: this.getRandomPosition(80) + '%', // Left aleatorio
-        backgroundColor: this.getRandomColor() // Color aleatorio
-      };
-    });
-    // console.log(this.data);
-    // const nombres = Object.values(this.data).map((item: any) => { item.nombre });
-    // console.log(nombres)
   }
 
   getRandomPosition(max: number): number {
