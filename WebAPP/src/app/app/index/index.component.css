@@ -8,6 +8,7 @@ p-menubar {
 .content {
     margin-top: 60px;
     padding: 20px;
+    flex: 1;
 }
 
 /* Estilos generales para el menú */

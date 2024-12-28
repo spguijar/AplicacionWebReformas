@@ -1,5 +1,8 @@
-<p-menubar [model]="items"></p-menubar>
+<div class="wrapper">
+    <p-menubar [model]="items"></p-menubar>
 
-<div class="content">
-    <router-outlet></router-outlet>
+    <div class="content">
+        <router-outlet></router-outlet>
+        <app-footer></app-footer>
+    </div>
 </div>
