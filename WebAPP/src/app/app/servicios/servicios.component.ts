@@ -3,7 +3,7 @@ import { cliente } from 'src/app/interfaces/cliente.interface';
 import { SharedDataService } from 'src/app/services/shared-data.service';
 import { dataCliente } from '../utils';
 import { ApiService } from 'src/app/services/api.service';
-import { Subject, takeUntil } from 'rxjs';
+import { firstValueFrom, Subject, takeUntil } from 'rxjs';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
@@ -12,13 +12,18 @@ import { ConfirmationService, MessageService } from 'primeng/api';
   styleUrls: ['./servicios.component.css']
 })
 export class ServiciosComponent implements OnInit {
+
   data: any;
   serviciosbyCliente: any;
   public infoCliente: cliente = dataCliente;
   tareas: any[] = []; // Array para almacenar las tareas procesadas
   selectedTarea: any; // Variable para la tarea seleccionada
   horas: number = 0; // Campo para almacenar las horas imputadas
-  tareasClientes: string[] = [];
+  tareasClientes: {
+    id_servicio_empresa: number;
+    preciocontrat: string;
+    tarea: string;
+  }[] = [];
   presupuesto: number = 0;
 
   public provinciaCliente: string = '';
@@ -75,10 +80,17 @@ export class ServiciosComponent implements OnInit {
       .subscribe(
         response => {
           this.serviciosbyCliente = {
-            ...response["servicios"]["0"].Servicios_Empresas
+            ...response["servicios"]
           };
           console.log(this.serviciosbyCliente);
-          this.tareasClientes = ['fontaneria', 'grifos', 'pintura']
+          this.tareasClientes = Object.values(this.serviciosbyCliente).flatMap((cliente: any) =>
+            cliente.Servicios_Empresas.map((empresa: any) => ({
+              id_servicio_empresa: empresa.Clientes_Servicios_Empresa.id_servicio_empre,
+              preciocontrat: empresa.Clientes_Servicios_Empresa.preciocontrat,
+              tarea: empresa.Servicio.tarea
+            }))
+          );
+          console.log(this.tareasClientes)
         }, error => console.error('Error al obtener los datos:', error)
       )
   }
@@ -110,15 +122,7 @@ export class ServiciosComponent implements OnInit {
     return 0; // Si no se encuentra la tarea, retorna 0
   }
 
-
-  onSubmit() {
-    console.log(`Tarea seleccionada: ${this.selectedTarea}`);
-    console.log(`Horas imputadas: ${this.horas}`);
-  }
-
-  confirmBorradoServicio(index: number) {
-    console.log('confirmdelete....');
-
+  confirmBorradoServicio(id_servicio_empresa: number) {
     //Mensaje de dialogo de borrado del servicio
     this.confirmationService.confirm({
       message: '¿Seguro que deseas borrar el servicio seleccionado?',
@@ -126,10 +130,68 @@ export class ServiciosComponent implements OnInit {
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Sí',
       rejectLabel: 'No',
-      accept: () => {
+      accept: async () => {
         // Acción a realizar si el usuario acepta
-        console.log('Servicio borrado');
-        this.tareasClientes.splice(index, 1); // Elimina la tarea por índice
+        console.log(this.tareasClientes);
+        console.log(id_servicio_empresa);
+        try {
+          const response = await firstValueFrom(this.apiService.EliminarServiciosDeCliente(this.id_cliente, id_servicio_empresa));
+          console.log('respuesta....', response);
+          console.log('respuesta....', response.status);
+          // Verificar si el status es 200
+          if (response.status === 200) {
+            console.log('Eliminación exitosa:', response.message || response);
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Éxito',
+              detail: 'Servicio eliminado correctamente',
+            });
+            this.subscribegetDataServiciosbycliente(this.id_cliente);
+
+          } else {
+            console.log('Respuesta no esperada:', response);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Ocurrió un problema al eliminar el servicio. Inténtalo nuevamente.',
+            });
+          }
+        } catch (error) {
+          console.error('Error al eliminar el servicio:', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Ocurrió un problema al eliminar el servicio. Inténtalo nuevamente.',
+          });
+        } finally {
+          // Mensaje final cuando se completa la operación
+          console.log('Operación finalizada.');
+        }
+
+        // this.subscribeEliminarServiciosDeCliente(this.id_cliente, id_servicio_empresa)
+        //   .then(status => {
+        //     this.subscribegetDataServiciosbycliente(this.id_cliente);
+        //     this.messageService.add({
+        //       severity: 'success',
+        //       summary: 'Éxito',
+        //       detail: 'Servicio eliminado correctamente',
+        //     });
+        //   })
+        //   .catch(errorStatus => {
+        //     console.error('Status de error recibido:', errorStatus);
+        //     this.messageService.add({
+        //       severity: 'error',
+        //       summary: 'Error',
+        //       detail: 'Ocurrió un problema al eliminar el servicio',
+        //     });
+        //   });
+
+        // for (let i = this.tareasClientes.length - 1; i >= 0; i--) {
+        //   if (this.tareasClientes[i].id_servicio_empresa === id_servicio_empresa) {
+        //     this.tareasClientes.splice(i, 1);
+        //   }
+        // }
+
       },
       reject: () => {
         // Acción a realizar si el usuario rechaza
@@ -152,7 +214,7 @@ export class ServiciosComponent implements OnInit {
           console.log('Servicio creado');
           this.subscribecrearClienteyServicios(this.selectedTarea, this.id_cliente, this.presupuesto)
             .then(status => {
-              console.log('Status recibido:', status);
+              this.subscribegetDataServiciosbycliente(this.id_cliente);
               this.messageService.add({
                 severity: 'success',
                 summary: 'Éxito',
@@ -176,6 +238,26 @@ export class ServiciosComponent implements OnInit {
       });
     }
   }
+
+  subscribeEliminarServiciosDeCliente(id_cliente: number, id_servicio_empresa: number): Promise<number> {
+    return new Promise((resolve, reject) => {
+      this.apiService.EliminarServiciosDeCliente(this.id_cliente, id_servicio_empresa)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(
+          response => {
+            console.log(response);
+            console.log(response.status)
+            resolve(response.status);
+          },
+          error => {
+            console.error('Error completo:', error);
+            console.error('Status de error:', error.status);
+            reject(error.status); // Rechazamos el status en caso de error
+          }
+        );
+    })
+  }
+
   subscribecrearClienteyServicios(id_servicio_empresa: string, id_cliente: number, preciocontrat: number): Promise<number> {
     return new Promise((resolve, reject) => {
       this.apiService.crearClienteyServicios(id_servicio_empresa, id_cliente, preciocontrat)

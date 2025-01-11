@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { provincias } from '../../utils';
+import { firstValueFrom } from 'rxjs';
+import { ApiService } from 'src/app/services/api.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -16,14 +19,30 @@ export class RegisterComponent {
   province: any = null;
   provinces = provincias;
 
-  constructor(private messageService: MessageService) {
+  constructor(private messageService: MessageService, private apiService: ApiService, private router: Router) {
 
   }
 
-  register() {
+  async register() {
     if (this.name && this.email && this.password && this.address && this.province) {
-      // Simula un registro exitoso
-      this.messageService.add({ severity: 'success', summary: '¡Registro exitoso!', detail: 'Te has registrado correctamente.' });
+      const response = await firstValueFrom(this.apiService.nuevoUsuario(this.name, this.email, this.password, this.address, this.province.name));
+      if (response.status === 201) {
+        console.log('Eliminación exitosa:', response.message || response);
+        this.messageService.add({
+          severity: 'success',
+          summary: ' Registro con éxito',
+          detail: 'Te has registrado correctamente.',
+        });
+        this.router.navigate(['/login']);
+      } else {
+        console.log('Respuesta no esperada:', response);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Ocurrió un problema al crear el registro. Inténtalo nuevamente.',
+        });
+      }
+
     } else {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Por favor, completa todos los campos.' });
     }
