@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -24,6 +24,14 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
+  //Metodo para agregar el token en los encabezados
+  private getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+  }
+
   // Métodos para obtener datos de la API
 
   nuevoUsuario(nombre: string, email: string, contraseña: string, direccion: string, provincia: string): Observable<any> {
@@ -44,31 +52,40 @@ export class ApiService {
   }
 
   getDataEmpresasbyProvincia(provincia: string): Observable<any> {
-    return this.http.get<any>(this.apiUrl + this.empresabyprovinciaUrl + provincia);
+    return this.http.get<any>(this.apiUrl + this.empresabyprovinciaUrl + provincia, {
+      headers: this.getHeaders(),
+    });
   }
 
   getDataServiciosbyProvincia(provincia: string): Observable<any> {
     const params = new HttpParams().set('provincia', provincia);
     console.log(params);
-    return this.http.get<any>(this.apiUrl + this.serviciosbyprovinciaUrl, { params });
+    return this.http.get<any>(this.apiUrl + this.serviciosbyprovinciaUrl, {
+      headers: this.getHeaders(),
+      params,
+    });
   }
+
+  // Obtener servicios de un cliente
 
   getDataServiciosbycliente(id_cliente: number): Observable<any> {
     const params = new HttpParams().set('id_cliente', id_cliente);
     console.log(params);
-    return this.http.get<any>(this.apiUrl + this.serviciosbyclienteUrl, { params });
+    return this.http.get<any>(this.apiUrl + this.serviciosbyclienteUrl, {
+      headers: this.getHeaders(),
+      params,
+    });
 
   }
+  // Eliminar servicios de un cliente
   EliminarServiciosDeCliente(id_cliente: number, id_servicio_empresa: number): Observable<any> {
-    // const params = {
     const params = new HttpParams()
       .set('id_cliente', id_cliente.toString())
       .set('id_servicio_empresa', id_servicio_empresa.toString());
-    //   id_cliente: id_cliente,
-    //   id_servicio_empresa: id_servicio_empresa
-    // }
+
     console.log(params);
     return this.http.delete<any>(this.apiUrl + this.clienteeliminarClienteandServiciosUrl, {
+      headers: this.getHeaders(),
       params,
       observe: 'response'
     });
@@ -82,9 +99,6 @@ export class ApiService {
 
     console.log(params)
 
-    return this.http.post<any>(this.apiUrl + this.clienteCrearClienteandServiciosUrl, params, { observe: 'response' });
-
+    return this.http.post<any>(this.apiUrl + this.clienteCrearClienteandServiciosUrl, params, { headers: this.getHeaders(), observe: 'response' });
   }
-
-
 }
