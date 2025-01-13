@@ -39,7 +39,7 @@
             <ng-template let-tarea pTemplate="body">
                 <tr>
                     <td style="text-align: right;">{{ tarea.tarea }}</td>
-                    <td>{{tarea.preciocontrat}}</td>
+                    <td>{{tarea.preciocontrat}} €</td>
                     <td style="text-align: left;">
                         <button pButton type="button" icon="pi pi-trash" class="p-button-rounded p-button-danger"
                             (click)="confirmBorradoServicio(tarea.id_servicio_empresa)">

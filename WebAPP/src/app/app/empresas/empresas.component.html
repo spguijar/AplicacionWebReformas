@@ -1,3 +1,5 @@
+<div>Los servicios que hay actualmente en <b>{{infoCliente.provincia}}</b> son los siguientes:</div>
+
 <div class="container">
     <div *ngFor="let empresa of empresas; let i = index" class="circle" [ngStyle]="circleStyles[i]">
         {{ empresa }}
