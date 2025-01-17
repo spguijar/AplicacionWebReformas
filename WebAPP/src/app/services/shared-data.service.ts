@@ -15,6 +15,5 @@ export class SharedDataService {
 
   setSharedData(data: cliente) {
     this.sharedCliente.next(data);
-    console.log(data);
   }
 }

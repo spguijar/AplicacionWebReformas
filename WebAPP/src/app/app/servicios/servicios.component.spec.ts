@@ -72,3 +72,5 @@ describe('ServiciosComponent', () => {
     const req = httpMock.expectOne('http://localhost:4000/servicios/getByProvincia/?provincia=Madrid');
     expect(req.request.method).toBe('GET'); // Aseguramos que el método sea GET
     req.flush(mockResponse); // Devolvemos el mock de la respuesta
+  })
+})

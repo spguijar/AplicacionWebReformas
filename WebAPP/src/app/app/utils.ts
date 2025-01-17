@@ -7,7 +7,6 @@ export const dataCliente = {
     direccion: ""
 }
 
-
 //Array con las provincias de Castilla y León
 export const provincias = [
     { name: 'Ávila' },
