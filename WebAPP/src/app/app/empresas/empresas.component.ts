@@ -26,11 +26,6 @@ export class EmpresasComponent implements OnInit, AfterViewInit {
     })
 
 
-
-
-    // console.log(this.data);
-    // const nombres = Object.values(this.data).map((item: any) => { item.nombre });
-    // console.log(nombres)
   }
   ngAfterViewInit(): void {
     this.apiService.getDataEmpresasbyProvincia(this.infoCliente.provincia)
