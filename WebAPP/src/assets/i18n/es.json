@@ -1,0 +1,10 @@
+{
+    "LOGIN": {
+        "TITLE": "ReformasEnTusManos",
+        "EMAIL": "Correo Electrónico",
+        "PASSWORD": "Contraseña",
+        "INSERT": "Ingresar",
+        "QUESTION": "¿No tienes cuenta?",
+        "REGISTER": "Registrar nuevo usuario"
+    }
+}

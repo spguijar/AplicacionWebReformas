@@ -6,7 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { EmpresasComponent } from './app/empresas/empresas.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './app/login/login.component';
 import { IndexComponent } from './app/index/index.component';
 import { InicioComponent } from './app/inicio/inicio.component';
@@ -22,6 +22,12 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { RegisterComponent } from './app/login/register/register.component';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
 
 @NgModule({
   declarations: [
@@ -45,7 +51,15 @@ import { RegisterComponent } from './app/login/register/register.component';
     DropdownModule,
     TableModule,
     ConfirmDialogModule,
-    ToastModule
+    ToastModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+
+      }
+    })
   ],
   providers: [ConfirmationService, MessageService],
   bootstrap: [AppComponent]
