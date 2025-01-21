@@ -24,13 +24,11 @@ export class IndexComponent implements OnInit {
       {
         label: 'Servicios',
         icon: 'pi pi-shopping-cart',
-        //RouterLink: ['/servicios'],
         command: () => { this.goToServices(); }
       },
       {
         label: 'Empresas',
         icon: 'pi pi-building',
-        //routerLink: ['/empresas'],
         command: () => { this.goToCompany(); }
       },
       {
@@ -55,13 +53,11 @@ export class IndexComponent implements OnInit {
   }
   goToHome() {
     // Navegar a la página de inicio
-    console.log('Ir a Inicio');
     this.router.navigate(['/home/inicio'])
   }
 
   goToServices() {
     // Navegar a la página de servicios
-    console.log('Ir a servicios');
     this.router.navigate(['/home/servicios'])
   }
   goToCompany() {

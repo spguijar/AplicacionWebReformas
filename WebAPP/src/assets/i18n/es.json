@@ -5,6 +5,10 @@
         "PASSWORD": "Contraseña",
         "INSERT": "Ingresar",
         "QUESTION": "¿No tienes cuenta?",
-        "REGISTER": "Registrar nuevo usuario"
+        "REGISTER": "Registrar nuevo usuario",
+        "NAME": "Nombre",
+        "ADDRESS": "Dirección",
+        "PROVINCE": "PROVINCIA",
+        "REGISTERBUTTON": "¡Registrarme!"
     }
 }

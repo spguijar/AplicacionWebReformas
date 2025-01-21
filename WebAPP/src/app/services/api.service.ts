@@ -9,6 +9,7 @@ export class ApiService {
 
   //Variables para montar la URL de la API
   private apiUrl = 'https://aplicacionweb-nodejs.onrender.com';
+  //private apiUrl = 'http://localhost:4000';
   //EmpresasApiURL
   private empresabyprovinciaUrl = '/empresa/getByProvincia/';
 
@@ -41,9 +42,6 @@ export class ApiService {
       .set('contraseña', contraseña)
       .set('direccion', direccion)
       .set('provincia', provincia);
-
-    console.log(params);
-
     return this.http.post<any>(this.apiUrl + this.clienteCrearNuevoClienteUrl, params, { observe: 'response' });
   }
 
@@ -59,7 +57,6 @@ export class ApiService {
 
   getDataServiciosbyProvincia(provincia: string): Observable<any> {
     const params = new HttpParams().set('provincia', provincia);
-    console.log(params);
     return this.http.get<any>(this.apiUrl + this.serviciosbyprovinciaUrl, {
       headers: this.getHeaders(),
       params,
@@ -70,20 +67,18 @@ export class ApiService {
 
   getDataServiciosbycliente(id_cliente: number): Observable<any> {
     const params = new HttpParams().set('id_cliente', id_cliente);
-    console.log(params);
     return this.http.get<any>(this.apiUrl + this.serviciosbyclienteUrl, {
       headers: this.getHeaders(),
       params,
     });
-
   }
+
   // Eliminar servicios de un cliente
   EliminarServiciosDeCliente(id_cliente: number, id_servicio_empresa: number): Observable<any> {
     const params = new HttpParams()
       .set('id_cliente', id_cliente.toString())
       .set('id_servicio_empresa', id_servicio_empresa.toString());
 
-    console.log(params);
     return this.http.delete<any>(this.apiUrl + this.clienteeliminarClienteandServiciosUrl, {
       headers: this.getHeaders(),
       params,
@@ -96,9 +91,15 @@ export class ApiService {
       id_servicio_empresa: id_servicio_empresa,
       preciocontrat: preciocontrat,
     }
+    return this.http.post<any>(this.apiUrl + this.clienteCrearClienteandServiciosUrl, params, { headers: this.getHeaders(), observe: 'response' });
 
-    console.log(params)
-
+  }
+  actualizaComentarioClienteyServicio(id_servicio_empresa: string, id_cliente: number, comentario: string) {
+    const params = {
+      id_cliente: id_cliente,
+      id_servicio_empresa: id_servicio_empresa,
+      nuevoComentario: comentario
+    }
     return this.http.post<any>(this.apiUrl + this.clienteCrearClienteandServiciosUrl, params, { headers: this.getHeaders(), observe: 'response' });
   }
 }
