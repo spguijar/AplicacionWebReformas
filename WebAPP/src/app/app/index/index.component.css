@@ -5,13 +5,41 @@ p-menubar {
     z-index: 1000;
 }
 
-.content {
-    margin-top: 60px;
-    padding: 20px;
-    flex: 1;
+html,
+body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Estilos generales para el menú */
+/* Contenedor principal */
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    /* Asegura que ocupe al menos la altura total de la ventana */
+}
+
+/* La barra de menú está fija */
+p-menubar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+/* Espacio para el contenido principal */
+.content {
+    flex: 1;
+    /* Ocupa todo el espacio disponible entre el header y el footer */
+    margin-top: 60px;
+    /* Compensa la altura del menú */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
 .menu-bar {
     background-color: #ff6600;
     /* Color de fondo naranja */
