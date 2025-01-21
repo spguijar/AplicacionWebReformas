@@ -18,6 +18,7 @@ export class ServiciosComponent implements OnInit {
   public infoCliente: cliente = dataCliente;
   tareas: any[] = []; // Array para almacenar las tareas procesadas
   selectedTarea: any; // Variable para la tarea seleccionada
+  selectedServicio: any = null;
   horas: number = 0; // Campo para almacenar las horas imputadas
   tareasClientes: {
     id_servicio_empresa: number;
@@ -25,6 +26,7 @@ export class ServiciosComponent implements OnInit {
     tarea: string;
   }[] = [];
   presupuesto: number = 0;
+  comentario: string = '';
 
   public provinciaCliente: string = '';
   public id_cliente: number = 0;
@@ -47,19 +49,12 @@ export class ServiciosComponent implements OnInit {
   }
 
   subscribegetServiciosbyProvincia(provinciaCliente: string) {
-
-    console.log(provinciaCliente);
     this.apiService.getDataServiciosbyProvincia(provinciaCliente)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(
         response => {
           this.data = {
-            ...response["servicios"]//.map((servicio: any) => {
-            //   return {
-            //     tarea: servicio.tarea,
-            //     preciohora: servicio.Empresas[0].preciohora // Suponiendo que siempre hay al menos una empresa
-            //   };
-            //})
+            ...response["servicios"]
           };
           console.log('data', this.data);
           console.log(Object.keys(this.data).map((key) => this.data[key].Empresas[0].nombre));
@@ -87,13 +82,39 @@ export class ServiciosComponent implements OnInit {
             cliente.Servicios_Empresas.map((empresa: any) => ({
               id_servicio_empresa: empresa.Clientes_Servicios_Empresa.id_servicio_empre,
               preciocontrat: empresa.Clientes_Servicios_Empresa.preciocontrat,
-              tarea: empresa.Servicio.tarea
+              tarea: empresa.Servicio.tarea,
+              fecha: empresa.Clientes_Servicios_Empresa.fechamodif,
+              comentarios: empresa.Clientes_Servicios_Empresa.comentarios
             }))
           );
           console.log(this.tareasClientes)
         }, error => console.error('Error al obtener los datos:', error)
       )
   }
+
+  onRowSelect(event: any) {
+    this.selectedServicio = event.data;
+    console.log(this.selectedServicio);
+  }
+  onRowUnselect() {
+    this.selectedServicio = null;
+  }
+
+  guardarComentario() {
+    if (this.selectedServicio) {
+      this.subscribeActualizaComentarioClienteyServicio(this.selectedServicio.id_servicio_empresa, this.id_cliente, this.comentario)
+        .then(status => {
+          this.subscribegetDataServiciosbycliente(this.id_cliente);
+          this.messageServiceCorrecto();
+          this.comentario = '';
+        })
+        .catch(errorStatus => {
+          console.error('Status de error recibido:', errorStatus);
+          this.messageServiceError();
+        });
+    }
+  }
+
 
   calcularPresupuesto(): void {
     this.presupuesto = this.getPresupuesto(this.data, this.selectedTarea, this.horas);
@@ -121,6 +142,21 @@ export class ServiciosComponent implements OnInit {
 
     return 0; // Si no se encuentra la tarea, retorna 0
   }
+  messageServiceCorrecto() {
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Éxito',
+      detail: 'Cambio realizado correctamente',
+    });
+  }
+
+  messageServiceError() {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: 'Ocurrió un problema.Intentelo de nuevo',
+    });
+  }
 
   confirmBorradoServicio(id_servicio_empresa: number) {
     //Mensaje de dialogo de borrado del servicio
@@ -140,29 +176,17 @@ export class ServiciosComponent implements OnInit {
           console.log('respuesta....', response.status);
           // Verificar si el status es 200
           if (response.status === 200) {
-            console.log('Eliminación exitosa:', response.message || response);
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Éxito',
-              detail: 'Servicio eliminado correctamente',
-            });
+            this.messageServiceCorrecto();
             this.subscribegetDataServiciosbycliente(this.id_cliente);
 
           } else {
             console.log('Respuesta no esperada:', response);
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'Ocurrió un problema al eliminar el servicio. Inténtalo nuevamente.',
-            });
+            this.messageServiceError();
+
           }
         } catch (error) {
           console.error('Error al eliminar el servicio:', error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'Ocurrió un problema al eliminar el servicio. Inténtalo nuevamente.',
-          });
+          this.messageServiceError();
         } finally {
           // Mensaje final cuando se completa la operación
           console.log('Operación finalizada.');
@@ -215,19 +239,11 @@ export class ServiciosComponent implements OnInit {
           this.subscribecrearClienteyServicios(this.selectedTarea, this.id_cliente, this.presupuesto)
             .then(status => {
               this.subscribegetDataServiciosbycliente(this.id_cliente);
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Éxito',
-                detail: 'Servicio contratado correctamente',
-              });
+              this.messageServiceCorrecto();
             })
             .catch(errorStatus => {
               console.error('Status de error recibido:', errorStatus);
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'Ocurrió un problema al contratar el servicio',
-              });
+              this.messageServiceError();
             });
         },
         reject: () => {
@@ -261,6 +277,26 @@ export class ServiciosComponent implements OnInit {
   subscribecrearClienteyServicios(id_servicio_empresa: string, id_cliente: number, preciocontrat: number): Promise<number> {
     return new Promise((resolve, reject) => {
       this.apiService.crearClienteyServicios(id_servicio_empresa, id_cliente, preciocontrat)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(
+          response => {
+            console.log(response);
+            console.log(response.status)
+            resolve(response.status);
+          },
+          error => {
+            console.error('Error completo:', error);
+            console.error('Status de error:', error.status);
+            reject(error.status); // Rechazamos el status en caso de error
+          }
+        );
+    });
+  }
+
+  subscribeActualizaComentarioClienteyServicio(id_servicio_empresa: string, id_cliente: number, comentario: string): Promise<number> {
+    console.log('subscribeActualizaComentarioClienteyServicio')
+    return new Promise((resolve, reject) => {
+      this.apiService.actualizaComentarioClienteyServicio(id_servicio_empresa, id_cliente, comentario)
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(
           response => {

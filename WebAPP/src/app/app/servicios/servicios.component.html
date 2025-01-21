@@ -4,7 +4,7 @@
     <form (ngSubmit)="confirmCreacionServicio()">
         <!-- Dropdown para seleccionar una tarea -->
         <div class="form-row">
-            <label for="tarea">Tarea:</label>
+            <label for="tarea">Servicio:</label>
             <p-dropdown [options]="tareas" [(ngModel)]="selectedTarea" name="tarea" placeholder="Seleccione una tarea"
                 inputId="tarea" (onchange)="calcularPresupuesto()">
             </p-dropdown>
@@ -22,30 +22,53 @@
         </div>
 
         <!-- Botón de envío -->
-        <div class="form-row">
+        <div class="form-row button">
             <button pButton type="submit" label="Contratar"></button>
         </div>
     </form>
 
     <div>
-        <p-table [value]="tareasClientes" [style]="{ width: '100%' }">
+        <p-table [value]="tareasClientes" [style]="{ width: '100%' }" selectionMode="single"
+            [(selection)]="selectedServicio" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect()">
             <ng-template pTemplate="header">
                 <tr>
-                    <th style="text-align: right;">Tarea</th>
+                    <th style="text-align: right;">Servicio</th>
                     <th>Presupuesto</th>
+                    <th>Fecha modificación del servicio</th>
                     <th style="text-align: left;">Acciones</th>
                 </tr>
             </ng-template>
             <ng-template let-tarea pTemplate="body">
-                <tr>
-                    <td style="text-align: right;">{{ tarea.tarea }}</td>
-                    <td>{{tarea.preciocontrat}} €</td>
-                    <td style="text-align: left;">
+                <tr [pSelectableRow]="tarea">
+                    <td data-label="Servicio" style="text-align: right;">{{ tarea.tarea }}</td>
+                    <td data-label="Presupuesto">{{tarea.preciocontrat}} €</td>
+                    <td data-label="Fecha modificación">{{tarea.fecha}}</td>
+                    <td data-label="Acciones" style="text-align: left;">
                         <button pButton type="button" icon="pi pi-trash" class="p-button-rounded p-button-danger"
                             (click)="confirmBorradoServicio(tarea.id_servicio_empresa)">
                         </button>
                     </td>
                 </tr>
+                <tr *ngIf="selectedServicio && selectedServicio.id_servicio_empresa === tarea.id_servicio_empresa">
+                    <td colspan="4" class="area-comment">
+                        <div>
+                            <label for="comentarios">Comentarios:</label>
+                            <textarea id="comentarios" rows="4" [(ngModel)]="comentario"
+                                placeholder="Añade un comentario..">
+                                        </textarea>
+                        </div>
+                        <button pButton label="Guardar Comentario" class="p-button p-button-success mt-2"
+                            (click)="guardarComentario()">
+                        </button>
+                        <div *ngIf="tarea.comentarios" class="mt-2">
+                            <p><strong>Comentarios existentes:</strong></p>
+                            <div *ngFor="let comentario of tarea.comentarios.split(';')">
+                                <p>- {{ comentario.trim() }}</p>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
             </ng-template>
         </p-table>
     </div>

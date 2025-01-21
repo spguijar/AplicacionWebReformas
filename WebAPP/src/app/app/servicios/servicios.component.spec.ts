@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
 describe('ServiciosComponent', () => {
   let component: ServiciosComponent;
   let fixture: ComponentFixture<ServiciosComponent>;
-  let httpMock: HttpTestingController; // Para controlar las solicitudes HTTP
+  let httpMock: HttpTestingController;
   let sharedDataService: SharedDataService;
 
   beforeEach(async () => {
@@ -44,11 +44,12 @@ describe('ServiciosComponent', () => {
       direccion: 'direcciontest'
     });
 
-    fixture.detectChanges(); // Disparamos ngOnInit()
+    // para disparar la función ngOnInit()
+    fixture.detectChanges();
   });
-
+  // Esto se ejecuta que no haya solicitudes pendientes
   afterEach(() => {
-    httpMock.verify(); // Verificamos que no haya solicitudes pendientes
+    httpMock.verify();
   });
 
   it('debería obtener los servicios por provincia', () => {
@@ -69,7 +70,7 @@ describe('ServiciosComponent', () => {
     };
 
     // Aseguramos que la solicitud HTTP sea enviada correctamente
-    const req = httpMock.expectOne('http://localhost:4000/servicios/getByProvincia/?provincia=Madrid');
+    const req = httpMock.expectOne('http://localhost:4000/servicios/getByProvincia/?provincia=Valladolid');
     expect(req.request.method).toBe('GET'); // Aseguramos que el método sea GET
     req.flush(mockResponse); // Devolvemos el mock de la respuesta
   })
