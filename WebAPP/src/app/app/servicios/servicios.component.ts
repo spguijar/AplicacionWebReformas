@@ -56,8 +56,6 @@ export class ServiciosComponent implements OnInit {
           this.data = {
             ...response["servicios"]
           };
-          console.log('data', this.data);
-          console.log(Object.keys(this.data).map((key) => this.data[key].Empresas[0].nombre));
 
           this.tareas = Object.keys(this.data).map((key) => ({
             label: this.data[key].tarea + ' - ' + this.data[key].Empresas[0].nombre, // Lo que se muestra en el dropdown
@@ -77,7 +75,6 @@ export class ServiciosComponent implements OnInit {
           this.serviciosbyCliente = {
             ...response["servicios"]
           };
-          console.log(this.serviciosbyCliente);
           this.tareasClientes = Object.values(this.serviciosbyCliente).flatMap((cliente: any) =>
             cliente.Servicios_Empresas.map((empresa: any) => ({
               id_servicio_empresa: empresa.Clientes_Servicios_Empresa.id_servicio_empre,
@@ -87,14 +84,12 @@ export class ServiciosComponent implements OnInit {
               comentarios: empresa.Clientes_Servicios_Empresa.comentarios
             }))
           );
-          console.log(this.tareasClientes)
         }, error => console.error('Error al obtener los datos:', error)
       )
   }
 
   onRowSelect(event: any) {
     this.selectedServicio = event.data;
-    console.log(this.selectedServicio);
   }
   onRowUnselect() {
     this.selectedServicio = null;
@@ -121,13 +116,11 @@ export class ServiciosComponent implements OnInit {
   }
 
   getPresupuesto(data: any, selectedTarea: string, horas: number): number {
-    console.log(data, selectedTarea, horas);
     //Condicional si en el caso de que una tarea o las horas son inválidas, retorna 0
     if ((selectedTarea === '') || (horas <= 0)) {
 
       return 0;
     }
-    console.log(Object.values(data))
     const tareaEncontrada = Object.values(data).find(
       (item: any) => item.Empresas[0].Servicios_Empresa.id === selectedTarea
     );
@@ -168,58 +161,28 @@ export class ServiciosComponent implements OnInit {
       rejectLabel: 'No',
       accept: async () => {
         // Acción a realizar si el usuario acepta
-        console.log(this.tareasClientes);
-        console.log(id_servicio_empresa);
         try {
           const response = await firstValueFrom(this.apiService.EliminarServiciosDeCliente(this.id_cliente, id_servicio_empresa));
-          console.log('respuesta....', response);
-          console.log('respuesta....', response.status);
           // Verificar si el status es 200
           if (response.status === 200) {
             this.messageServiceCorrecto();
             this.subscribegetDataServiciosbycliente(this.id_cliente);
 
           } else {
-            console.log('Respuesta no esperada:', response);
             this.messageServiceError();
 
           }
         } catch (error) {
-          console.error('Error al eliminar el servicio:', error);
           this.messageServiceError();
         } finally {
-          // Mensaje final cuando se completa la operación
-          console.log('Operación finalizada.');
         }
 
-        // this.subscribeEliminarServiciosDeCliente(this.id_cliente, id_servicio_empresa)
-        //   .then(status => {
-        //     this.subscribegetDataServiciosbycliente(this.id_cliente);
-        //     this.messageService.add({
-        //       severity: 'success',
-        //       summary: 'Éxito',
-        //       detail: 'Servicio eliminado correctamente',
-        //     });
-        //   })
-        //   .catch(errorStatus => {
-        //     console.error('Status de error recibido:', errorStatus);
-        //     this.messageService.add({
-        //       severity: 'error',
-        //       summary: 'Error',
-        //       detail: 'Ocurrió un problema al eliminar el servicio',
-        //     });
-        //   });
 
-        // for (let i = this.tareasClientes.length - 1; i >= 0; i--) {
-        //   if (this.tareasClientes[i].id_servicio_empresa === id_servicio_empresa) {
-        //     this.tareasClientes.splice(i, 1);
-        //   }
-        // }
 
       },
       reject: () => {
         // Acción a realizar si el usuario rechaza
-        console.log('Borrado cancelado');
+
       }
     });
   }
@@ -235,20 +198,17 @@ export class ServiciosComponent implements OnInit {
         rejectLabel: 'No',
         accept: () => {
           // Acción a realizar si el usuario acepta
-          console.log('Servicio creado');
           this.subscribecrearClienteyServicios(this.selectedTarea, this.id_cliente, this.presupuesto)
             .then(status => {
               this.subscribegetDataServiciosbycliente(this.id_cliente);
               this.messageServiceCorrecto();
             })
             .catch(errorStatus => {
-              console.error('Status de error recibido:', errorStatus);
               this.messageServiceError();
             });
         },
         reject: () => {
           // Acción a realizar si el usuario rechaza
-          console.log('Borrado cancelado');
         }
 
       });
@@ -261,13 +221,9 @@ export class ServiciosComponent implements OnInit {
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(
           response => {
-            console.log(response);
-            console.log(response.status)
             resolve(response.status);
           },
           error => {
-            console.error('Error completo:', error);
-            console.error('Status de error:', error.status);
             reject(error.status); // Rechazamos el status en caso de error
           }
         );
@@ -280,13 +236,9 @@ export class ServiciosComponent implements OnInit {
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(
           response => {
-            console.log(response);
-            console.log(response.status)
             resolve(response.status);
           },
           error => {
-            console.error('Error completo:', error);
-            console.error('Status de error:', error.status);
             reject(error.status); // Rechazamos el status en caso de error
           }
         );
@@ -294,19 +246,15 @@ export class ServiciosComponent implements OnInit {
   }
 
   subscribeActualizaComentarioClienteyServicio(id_servicio_empresa: string, id_cliente: number, comentario: string): Promise<number> {
-    console.log('subscribeActualizaComentarioClienteyServicio')
+
     return new Promise((resolve, reject) => {
       this.apiService.actualizaComentarioClienteyServicio(id_servicio_empresa, id_cliente, comentario)
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(
           response => {
-            console.log(response);
-            console.log(response.status)
             resolve(response.status);
           },
           error => {
-            console.error('Error completo:', error);
-            console.error('Status de error:', error.status);
             reject(error.status); // Rechazamos el status en caso de error
           }
         );

@@ -61,13 +61,11 @@ export class IndexComponent implements OnInit {
     this.router.navigate(['/home/servicios'])
   }
   goToCompany() {
-    console.log('Ir a empresas');
     this.router.navigate(['/home/empresas'])
   }
 
   logout() {
     // Lógica para cerrar sesión
-    console.log('Cerrar sesión');
     localStorage.clear();
     this.router.navigate(['/login']);
   }

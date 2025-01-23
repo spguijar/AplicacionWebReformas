@@ -27,7 +27,6 @@ export class RegisterComponent {
     if (this.name && this.email && this.password && this.address && this.province) {
       const response = await firstValueFrom(this.apiService.nuevoUsuario(this.name, this.email, this.password, this.address, this.province.name));
       if (response.status === 201) {
-        console.log('Eliminación exitosa:', response.message || response);
         this.messageService.add({
           severity: 'success',
           summary: ' Registro con éxito',
@@ -35,7 +34,6 @@ export class RegisterComponent {
         });
         this.router.navigate(['/login']);
       } else {
-        console.log('Respuesta no esperada:', response);
         this.messageService.add({
           severity: 'error',
           summary: 'Error',

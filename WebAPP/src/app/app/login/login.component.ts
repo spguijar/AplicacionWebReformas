@@ -20,7 +20,6 @@ export class LoginComponent {
 
   constructor(private apiService: ApiService, private router: Router, private sharedDataService: SharedDataService, private messageService: MessageService) { }
   login(): void {
-    console.log(this.email, this.password)
     this.apiService.login(this.email, this.password)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(
@@ -28,7 +27,6 @@ export class LoginComponent {
           localStorage.setItem('token', response.token);
           this.router.navigate(['/home/inicio']);
           this.sharedDataService.setSharedData(response);
-          console.log('Login exitoso');
         }, error => {
           this.messageService.add({
             severity: 'error',
