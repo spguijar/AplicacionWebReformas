@@ -9,6 +9,7 @@
         "NAME": "Nombre",
         "ADDRESS": "Dirección",
         "PROVINCE": "PROVINCIA",
-        "REGISTERBUTTON": "¡Registrarme!"
+        "REGISTERBUTTON": "¡Registrarme!",
+        "BACKTOLOGIN": "Volver a la página de login"
     }
 }
