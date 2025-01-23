@@ -35,6 +35,10 @@ button {
     border-color: #d35400;
 }
 
+button:hover {
+    background-color: #e67e22 !important;
+}
+
 .task-container {
     display: flex;
     justify-content: space-between;
