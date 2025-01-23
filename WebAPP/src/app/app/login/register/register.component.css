@@ -48,3 +48,22 @@ h2 {
 .btn-register:hover {
     background-color: #e67e22;
 }
+
+back-to-login {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    text-decoration: none;
+    color: #FFFFFF;
+    font-weight: bold;
+    background-color: #d35400;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.back-to-login:hover {
+    background-color: #e67e22;
+    color: #FFFFFF;
+}

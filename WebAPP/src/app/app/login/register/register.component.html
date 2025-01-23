@@ -1,4 +1,5 @@
 <div class="register-container">
+    <a class="back-to-login" [routerLink]="'/login'">{{'LOGIN.BACKTOLOGIN' | translate}}</a>
     <h2>{{'LOGIN.REGISTER' | translate}}</h2>
     <form (submit)="register()">
         <div class="form-group">
